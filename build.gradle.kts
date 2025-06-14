@@ -15,7 +15,7 @@ dependencies {
     implementation("jakarta.mail:jakarta.mail-api:2.1.0")
     implementation("com.sun.mail:jakarta.mail:2.0.1")
     implementation("mysql:mysql-connector-java:8.0.33")
-    implementation("org.eclipse.angus:jakarta.mail:2.0.3")
+    implementation("org.eclipse.angus:angus-mail:2.0.2")
 }
 
 tasks.test {

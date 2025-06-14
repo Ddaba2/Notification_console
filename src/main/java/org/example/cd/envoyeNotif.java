@@ -53,7 +53,7 @@ public class envoyeNotif {
 
     private static List<Abonne> getAbonnesActifs() throws SQLException {
         List<Abonne> abonnesActifs = new ArrayList<>();
-        String sql = "SELECT id, nom FROM abonnee WHERE etat = 'actif'";
+        String sql = "SELECT id, nom, prenom, email FROM abonnee WHERE etat = 'actif'";
         
         try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS);
              Statement stmt = con.createStatement();

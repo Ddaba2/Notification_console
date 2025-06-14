@@ -84,10 +84,10 @@ public class InterfaceAdmin {
                     EmailService.envoyerEmailsAbonnesActifs();
                     break;     
                 case "5":
-                //   HistoriqueNotif.afficherHistoriqueNotifications();
+                  HistoriqueNotif.afficherHistoriqueNotifications();
                     break;
                 case "6":
-                   afficherHistoriqueAdmin();
+                  HistoriqueEmail.afficherHistoriqueEmails();
                     break;
                 case "7":
                     System.out.println("Voici la liste des abonnés...");

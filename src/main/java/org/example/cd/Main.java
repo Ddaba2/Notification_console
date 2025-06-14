@@ -3,6 +3,8 @@ package org.example.cd;
 import java.sql.*;
 import java.util.Scanner;
 
+import static org.example.cd.HistoriqueEmail.afficherEmails;
+
 public class Main {
     // Informations de connexion à la base de données
     private static final String DB_URL = "jdbc:mysql://localhost:3306/gestionnotif";
@@ -85,7 +87,7 @@ public class Main {
                     break;
 
                 case 2:
-                    voirNotifications(abonneId);
+                    afficherEmails(abonneId);
                      break;
 
                 case 3:
@@ -110,8 +112,7 @@ public class Main {
         }
     }
 
-    
-
+   // Méthode pour voir les notifications de l'utilisateur
    private static void voirNotifications(int abonneId) {
     try {
         // Appel à la méthode de NotificationService

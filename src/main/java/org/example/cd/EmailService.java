@@ -8,21 +8,21 @@ import java.util.Scanner;
 
 public class EmailService {
     // Configuration corrigée de la base de données (nom exact)
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/gestionnoiff"; // "gestionnoiff" avec deux f
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/gestionnotif"; // "gestionnoiff" avec deux f
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
     
     // Configuration SMTP
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
-    private static final String SMTP_USER = "votre_email@gmail.com";
-    private static final String SMTP_PASSWORD = "votre_mot_de_passe_app";
+    private static final String SMTP_USER = "dabadiallo694@gmail.com";
+    private static final String SMTP_PASSWORD = "aimf vljh yjkn shiq";
 
-    static {
-        // Force l'utilisation d'Angus Mail comme fournisseur
-        System.setProperty("jakarta.mail.util.StreamProvider", "org.eclipse.angus.mail.util.StreamProvider");
-    }
-
+    /**
+     * Envoie un email à tous les abonnés actifs.
+     * Cette méthode récupère les abonnés actifs depuis la base de données,
+     * envoie un email à chacun d'eux et enregistre l'envoi dans la base de données.
+     */
     public static void envoyerEmailsAbonnesActifs() {
         Scanner scanner = new Scanner(System.in);// Scanner passé en paramètre
         System.out.println("\n=== Envoi d'email aux abonnés actifs ===");
@@ -73,7 +73,15 @@ public class EmailService {
             System.err.println("Envoi interrompu");
         }
     }
-
+    /**
+     * Enregistre les détails de l'email envoyé dans la base de données.
+     * @param con La connexion à la base de données
+     * @param numero Le numéro de l'abonné
+     * @param email L'email de l'abonné
+     * @param sujet Le sujet de l'email
+     * @param contenu Le contenu de l'email
+     * @throws SQLException Si une erreur SQL se produit
+     */
     private static void enregistrerEmailEnvoye(Connection con, String numero, 
                                              String email, String sujet, 
                                              String contenu) throws SQLException {
@@ -88,7 +96,13 @@ public class EmailService {
             pstmt.executeUpdate();
         }
     }
-
+    /**
+     * Envoie un email à un destinataire spécifique.
+     * @param to L'adresse email du destinataire
+     * @param sujet Le sujet de l'email
+     * @param contenu Le contenu de l'email
+     * @throws MessagingException Si une erreur se produit lors de l'envoi de l'email
+     */
     private static void envoyerEmail(String to, String sujet, String contenu) throws MessagingException, jakarta.mail.MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host", SMTP_HOST);
@@ -97,13 +111,14 @@ public class EmailService {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.ssl.trust", SMTP_HOST);
         props.put("mail.smtp.ignorelistener", "true");
+        props.put("mail.debug", "true"); // Active les logs SMTP
         
         Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(SMTP_USER, SMTP_PASSWORD);
             }
         });
-
+        
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SMTP_USER));
