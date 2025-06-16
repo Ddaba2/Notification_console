@@ -1,169 +1,124 @@
-package org.example.cd;//import AbonneeService;
+package org.example.cd;
+
 import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Scanner;
 
-
-
-
 public class InterfaceAdmin {
-
     private static final String DB_URL = "jdbc:mysql://localhost:3306/gestionnotif";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
+    private static final Scanner scanner = new Scanner(System.in);
 
-   
+    public static void main(String[] args) {
+        demarrer();
+    }
 
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static void demarrer(Scanner scanner) {
-        // Texte d'accueil avec encadrement coloré
-        String welcome = "=== Interface Admin ===";
-        System.out.println(ANSI_GREEN + welcome + ANSI_RESET);
+    public static void demarrer() {
+        afficherEntete("Interface Admin");
+        
+        if (!authentifierAdmin()) {
+            System.out.println("Accès refusé. Retour au menu principal.");
+            return;
+        }
 
-
-        System.out.print("Entrez le mot de passe admin : ");
-        String mot_de_passeAdmin = scanner.nextLine();
-        // Authentification de l'administrateur
-        if (authentifierAdmin(mot_de_passeAdmin)) {
-            System.out.println("Connexion admin réussie.");
-            afficherMenuAdmin(scanner);
-        } else {
-            System.out.println("Mot de passe incorrect. Retour au menu abonné.");
+        boolean continuer = true;
+        while (continuer) {
+            afficherMenu();
+            String choix = scanner.nextLine();
+            
+            switch (choix) {
+                case "1" -> AjouterAbonnee();
+                case "2" -> desactiverAbonne();
+                case "3" -> EnvoyerNotification();
+                case "4" -> EmailService.envoyerEmailsAbonnesActifs();
+                case "5" -> afficherHistorique();
+                case "6" -> afficherHistorique();
+                case "7" -> AfficherAbonnee.afficherAbonnes();
+                case "8" -> {
+                    System.out.println("Déconnexion...");
+                    continuer = false;
+                }
+                case "9" -> {
+                    System.out.println("Fermeture de l'application...");
+                    System.exit(0);
+                }
+                default -> System.out.println("Option invalide. Veuillez réessayer.");
+            }
         }
     }
 
-    private static boolean authentifierAdmin(String mot_de_passeAdmin) {
- 
-        String query = "SELECT mot_de_passe  FROM admin WHERE mot_de_passe = ?";
+    private static Object afficherHistorique() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'afficherHistorique'");
+    }
+
+    private static Object EnvoyerNotification() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'EnvoyerNotification'");
+    }
+
+    private static Object AjouterAbonnee() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'AjouterAbonnee'");
+    }
+
+    private static boolean authentifierAdmin() {
+        System.out.print("Entrez le mot de passe admin : ");
+        String motDePasse = scanner.nextLine();
+
+        String query = "SELECT COUNT(*) FROM admin WHERE mot_de_passe = ?";
+        
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, mot_de_passeAdmin);
+            
+            stmt.setString(1, motDePasse);
             ResultSet rs = stmt.executeQuery();
-            return rs.next();
-
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de l'authentification : " + e.getMessage());
-            return false;
-        }
-    }
-
-    private static void afficherMenuAdmin(Scanner scanner) {
-        boolean quitter = false;
-
-        while (!quitter) {
-            System.out.println(ANSI_GREEN +"\n=== Menu Admin ===" + ANSI_RESET);
-            System.out.println("1. Ajouter un abonné");
-            System.out.println("2. Désactiver un abonné");
-            System.out.println("3. Envoyer une notifications");
-            System.out.println("4. Envoyer un email");
-            System.out.println("5. Voire notifications envoyées");
-            System.out.println("6. Voire emails envoyés");
-            System.out.println("7. Afficher les abonnés");
-            System.out.println("8. Se déconnecter");
-            System.out.println("9. Quitter");
-            System.out.print("Votre choix : ");
-            String choix = scanner.nextLine();
-
-            switch (choix) {
-                case "1":
-                    System.out.println("Ajout d'un abonné...");
-                    Add.ajouterAbonnee();
-                    break;
-                case "2":
-                    System.out.println("Désactivation d'un abonné...");
-                    inactif(scanner);
-                    break;
-                case "3":
-                    System.out.println("Envoi d'une notification...");
-                    envoyeNotif.envoyerNotification();
-                    break;
-                case "4":
-                    EmailService.envoyerEmailsAbonnesActifs();
-                    break;     
-                case "5":
-                  HistoriqueNotif.afficherHistoriqueNotifications();
-                    break;
-                case "6":
-                  HistoriqueEmail.afficherHistoriqueEmails();
-                    break;
-                case "7":
-                    System.out.println("Voici la liste des abonnés...");
-                    AfficherAbonnee.afficherAbonnes();
-                    break;
-
-                case "8":
-                    System.out.println("Déconnexion de l'interface admin...");
-                    quitter = true;
-                    break;
-
-                case "9":
-                    quitter = true;
-                    break;
-                default:
-                    System.out.println("Choix invalide. Veuillez réessayer.");
+            
+            if (rs.next() && rs.getInt(1) > 0) {
+                System.out.println("Authentification réussie.");
+                return true;
             }
-        }   
-    }
-    
-
-
- private static void envoyerNotificationsEmail(Scanner scanner) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'envoyerNotificationsEmail'");
-    }
-
- private static void afficherHistoriqueAdmin() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'afficherHistoriqueAdmin'");
-    }
-
- 
-
- private static void voirNotif() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'voirNotif'");
-    }
-
- private static void envoyerNotifications() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'envoyerNotifications'");
-    }
-
- private static void voirNotifications(String string) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'voirNotifications'");
-    }
-
-// Désactivé un abonné avec une mise à jour de son état dans la base de données
-private static void inactif(Scanner scanner) {
-    System.out.print("Entrez le numéro à désactiver : ");
-    String numero = scanner.nextLine();
-
-    String sql = "UPDATE abonnee SET etat = ? WHERE numero = ?";
-
-    try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-         PreparedStatement pstmt = con.prepareStatement(sql)) {
-
-        pstmt.setString(1, "inactif");
-        pstmt.setString(2, numero);
-
-        int rows = pstmt.executeUpdate();
-        if (rows > 0) {
-            System.out.println(rows + " abonné désactivé(s).");
-        } else {
-            System.out.println("Aucun abonné trouvé avec ce numéro.");
+        } catch (SQLException e) {
+            System.err.println("Erreur d'authentification : " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.err.println("Erreur SQL : " + e.getMessage());
+        return false;
     }
-}
-   
-    private static void emailEnvoye() {
-     
-        System.out.println("Envoi d'un email...");
-        // Vous pouvez appeler la méthode de votre classe emailEnvoye ici
+
+    private static void afficherEntete(String titre) {
+        System.out.println("\n" + "=".repeat(30));
+        System.out.println(titre);
+        System.out.println("=".repeat(30) + "\n");
+    }
+
+    private static void afficherMenu() {
+        afficherEntete("Menu Principal");
+        System.out.println("1. Ajouter un abonné");
+        System.out.println("2. Désactiver un abonné");
+        System.out.println("3. Envoyer une notification");
+        System.out.println("4. Envoyer un email");
+        System.out.println("5. Voir historique notifications");
+        System.out.println("6. Voir historique emails");
+        System.out.println("7. Lister les abonnés");
+        System.out.println("8. Se déconnecter");
+        System.out.println("9. Quitter l'application");
+        System.out.print("\nVotre choix : ");
+    }
+
+    private static void desactiverAbonne() {
+        System.out.print("Entrez le numéro de l'abonné à désactiver : ");
+        String numero = scanner.nextLine();
+
+        String sql = "UPDATE abonnee SET etat = 'inactif' WHERE numero = ?";
+        
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            
+            pstmt.setString(1, numero);
+            int rows = pstmt.executeUpdate();
+            
+            System.out.println(rows > 0 ? "Abonné désactivé avec succès." : "Aucun abonné trouvé.");
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la désactivation : " + e.getMessage());
+        }
     }
 }

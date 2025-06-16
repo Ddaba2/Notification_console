@@ -7,6 +7,7 @@ import java.util.List;
 
 // Classe pour gérer les notifications
 public class NotificationService {
+    // Configuration de la base de données
     private static final String DB_URL = "jdbc:mysql://localhost:3306/gestionnotif";
     private static final String USER = "root";
     private static final String PASS = "";

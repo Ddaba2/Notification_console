@@ -79,7 +79,7 @@ public class Main {
 
             switch (choix) {
                 case 00:
-                    InterfaceAdmin.demarrer(scanner);
+                    InterfaceAdmin.demarrer();
                     break;
 
                 case 1:
